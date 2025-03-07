@@ -107,7 +107,7 @@ pip install websocket==0.2.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
 pip install websocket-client==1.8.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # install dsgbench model ability calculation library
-pip install dsgbench-ability-calc==0.1.0
+pip install dsgbench-ability-calc==0.2.0
 
 ```
 
