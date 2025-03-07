@@ -1,0 +1,10 @@
+model_name: qwen2.5
+#model_name: meta/llama-3.1-8b-instruct
+#api_key: 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
+#api_url: https://integrate.api.nvidia.com/v1
+api_key: ollama
+api_url: http://localhost:6006/v1
+max_tokens: 4096
+timeout: 300
+temperature: 0.2
+model_type: LLMModel

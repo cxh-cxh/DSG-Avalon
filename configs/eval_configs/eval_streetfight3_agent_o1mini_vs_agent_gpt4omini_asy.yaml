@@ -1,0 +1,20 @@
+
+eval:
+  num_matches: 10
+  output_path: ./output/streetfight3/o1mini_vs_agent_gpt4omini_asy
+  weave_prj_name: GT-MindEval-streetfight3-o1mini_vs_agent_gpt4omini_asy
+game:
+  game_name: StreetFight3Env
+  game_mode: agent_vs_agent
+  asynch_mode: True
+
+agent:
+  -
+    agent_name: StreetFight3Agent
+    agent_model: LLMModel
+    agent_model_config: o1-mini.yaml
+    agent_prompt: StreetFight3Prompt
+
+    agent_model_opp: LLMModel
+    agent_model_config_opp: gpt-4o-mini.yaml
+    agent_prompt_opp: StreetFight3Prompt

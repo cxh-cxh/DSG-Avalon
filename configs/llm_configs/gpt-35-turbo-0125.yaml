@@ -1,0 +1,8 @@
+model_name: gpt-3.5-turbo-0125
+api_key: sk-ka7OYYwFMwm5ytNg993b1f32C5854a00A6E9B81742F86a0f
+#api_key: sk-oYqYsyhDhel35VQY73A8778479F444C38fBd8c59941899F9
+api_url: https://ai-yyds.com/v1
+max_tokens: 4096
+timeout: 60
+temperature: 0.2
+model_type: LLMModel

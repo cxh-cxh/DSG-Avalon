@@ -1,0 +1,7 @@
+model_name: deepseek-code
+api_key: sk-e851421cc0224deb8fad0c8a30d5c862
+api_url: https://api.deepseek.com
+max_tokens: 1024
+timeout: 60
+temperature: 0.2
+model_type: LLMModel

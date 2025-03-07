@@ -1,0 +1,8 @@
+model_name: o1-mini
+api_key: sk-zRWzFkGQCmUrG1MoE82d39E92210431e889952919d173468
+#api_key: sk-Ys6CbQudjZQUCvIG88F325Ff2eD7490fB2D1E3EcC4EcC038
+api_url: https://ai-yyds.com/v1
+max_tokens: 4096
+timeout: 300
+temperature: 0.2
+model_type: LLMModel

@@ -1,0 +1,41 @@
+eval:
+  num_matches: 10
+  output_path: ./output/GPT-4o/werewolf/scene1/GPT-4o_vs_gpt-4o-mini
+  weave_prj_name: eval_GPT-4o_werewolf_scene1_GPT-4o_vs_gpt-4o-mini
+game:
+  game_name: WereWolfEnv
+  good_model_config: GPT-4o.yaml
+  bad_model_config: gpt-4o-mini.yaml
+agent:
+- agent_name: WereWolfAgent
+  agent_nick: Seer
+  agent_model: LLMModel
+  agent_model_config: GPT-4o.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Doctor
+  agent_model: LLMModel
+  agent_model_config: GPT-4o.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Villager
+  agent_model: LLMModel
+  agent_model_config: GPT-4o.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Villager
+  agent_model: LLMModel
+  agent_model_config: GPT-4o.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Villager
+  agent_model: LLMModel
+  agent_model_config: GPT-4o.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Villager
+  agent_model: LLMModel
+  agent_model_config: GPT-4o.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Werewolf
+  agent_model: LLMModel
+  agent_model_config: gpt-4o-mini.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Werewolf
+  agent_model: LLMModel
+  agent_model_config: gpt-4o-mini.yaml

@@ -1,0 +1,16 @@
+agent:
+- agent_model: LLMModel
+  agent_model_config: deepseek-v25.yaml
+  agent_model_config_opp: gpt-4o-mini.yaml
+  agent_model_opp: LLMModel
+  agent_name: StreetFight3Agent
+  agent_prompt: StreetFight3Prompt
+  agent_prompt_opp: StreetFight3Prompt
+eval:
+  num_matches: 10
+  output_path: ./output/deepseek-v25/streetfight3/scene2/deepseek-v25_vs_gpt-4o-mini_asyFalse
+  weave_prj_name: eval_deepseek-v25_streetfight3_scene2_deepseek-v25_vs_gpt-4o-mini_asyFalse
+game:
+  asynch_mode: false
+  game_mode: agent_vs_agent
+  game_name: StreetFight3Env

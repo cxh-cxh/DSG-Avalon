@@ -1,0 +1,7 @@
+model_name: deepseek-chat
+api_key: sk-0161f83279f34eba9f8d01fa17034265
+api_url: https://api.deepseek.com
+max_tokens: 1024
+timeout: 60
+temperature: 0.2
+model_type: LLMModel

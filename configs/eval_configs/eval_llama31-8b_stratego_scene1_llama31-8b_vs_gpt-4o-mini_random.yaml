@@ -1,0 +1,16 @@
+agent:
+- agent_model: LLMModel
+  agent_model_config: llama31-8b.yaml
+  agent_model_config_opp: gpt-4o-mini.yaml
+  agent_model_opp: LLMModel
+  agent_name: StrategoAgent
+  agent_prompt: StategoPrompt
+  agent_prompt_opp: StategoPrompt
+eval:
+  num_matches: 10
+  output_path: ./output/llama31-8b/stratego/scene1/llama31-8b_vs_gpt-4o-mini_random
+  weave_prj_name: eval_llama31-8b_stratego_scene1_llama31-8b_vs_gpt-4o-mini_random
+game:
+  game_init: random
+  game_mode: agent_vs_agent
+  game_name: StrategoMultiAgentEnv

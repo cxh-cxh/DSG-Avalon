@@ -1,0 +1,7 @@
+model_name: gpt-4o
+api_key: sk-gztMo0De5rW2dl3iB769C9Bc71B04b07940eC35a33B983B7
+api_url: https://ai-yyds.com/v1
+max_tokens: 4096
+timeout: 300
+temperature: 0.2
+model_type: LLMModel

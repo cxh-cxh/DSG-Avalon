@@ -1,0 +1,16 @@
+game:
+  game_name: AgentVSComputerStarcraftEnv
+  game_map: Ancient Cistern LE
+  players: Protoss_VS_Protoss
+  game_difficulty: medium
+  game_ai_build: macro
+  asynch_mode: false
+agent:
+- agent_name: GPTAgent
+  agent_model: LLMModel
+  agent_model_config: llama31-70b.yaml
+  agent_prompt: StarCraftIIPrompt_V4
+eval:
+  num_matches: 5
+  output_path: ./output/llama31-70b/starcraft2/scene1/llama31-70b_vs_computer_macro_asyFalse
+  weave_prj_name: eval_llama31-70b_starcraft2_scene1_agent_vs_computer_macro_asyFalse

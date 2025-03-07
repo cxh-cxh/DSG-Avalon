@@ -1,0 +1,7 @@
+model_name: gpt-4o-mini
+api_key: sk-t2BwbKSvvf9GJCyf3d14852f8dAc4d308c6a9572FeD8676e
+api_url: https://ai-yyds.com/v1
+max_tokens: 4096
+timeout: 300
+temperature: 0.2
+model_type: LLMModel

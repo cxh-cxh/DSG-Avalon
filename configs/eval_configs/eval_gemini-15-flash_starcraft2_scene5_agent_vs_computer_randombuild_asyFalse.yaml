@@ -1,0 +1,16 @@
+game:
+  game_name: AgentVSComputerStarcraftEnv
+  game_map: Ancient Cistern LE
+  players: Protoss_VS_Protoss
+  game_difficulty: medium
+  game_ai_build: randombuild
+  asynch_mode: false
+agent:
+- agent_name: GPTAgent
+  agent_model: LLMModel
+  agent_model_config: gemini-15-flash.yaml
+  agent_prompt: StarCraftIIPrompt_V4
+eval:
+  num_matches: 5
+  output_path: ./output/gemini-15-flash/starcraft2/scene5/gemini-15-flash_vs_computer_randombuild_asyFalse
+  weave_prj_name: eval_gemini-15-flash_starcraft2_scene5_agent_vs_computer_randombuild_asyFalse

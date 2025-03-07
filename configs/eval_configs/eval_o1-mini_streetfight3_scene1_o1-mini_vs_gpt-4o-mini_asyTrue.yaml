@@ -1,0 +1,16 @@
+agent:
+- agent_model: LLMModel
+  agent_model_config: o1-mini.yaml
+  agent_model_config_opp: gpt-4o-mini.yaml
+  agent_model_opp: LLMModel
+  agent_name: StreetFight3Agent
+  agent_prompt: StreetFight3Prompt
+  agent_prompt_opp: StreetFight3Prompt
+eval:
+  num_matches: 10
+  output_path: ./output/o1-mini/streetfight3/scene1/o1-mini_vs_gpt-4o-mini_asyTrue
+  weave_prj_name: eval_o1-mini_streetfight3_scene1_o1-mini_vs_gpt-4o-mini_asyTrue
+game:
+  asynch_mode: true
+  game_mode: agent_vs_agent
+  game_name: StreetFight3Env

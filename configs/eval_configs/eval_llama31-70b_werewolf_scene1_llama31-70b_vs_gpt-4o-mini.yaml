@@ -1,0 +1,41 @@
+eval:
+  num_matches: 10
+  output_path: ./output/llama31-70b/werewolf/scene1/llama31-70b_vs_gpt-4o-mini
+  weave_prj_name: eval_llama31-70b_werewolf_scene1_llama31-70b_vs_gpt-4o-mini
+game:
+  game_name: WereWolfEnv
+  good_model_config: llama31-70b.yaml
+  bad_model_config: gpt-4o-mini.yaml
+agent:
+- agent_name: WereWolfAgent
+  agent_nick: Seer
+  agent_model: LLMModel
+  agent_model_config: llama31-70b.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Doctor
+  agent_model: LLMModel
+  agent_model_config: llama31-70b.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Villager
+  agent_model: LLMModel
+  agent_model_config: llama31-70b.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Villager
+  agent_model: LLMModel
+  agent_model_config: llama31-70b.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Villager
+  agent_model: LLMModel
+  agent_model_config: llama31-70b.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Villager
+  agent_model: LLMModel
+  agent_model_config: llama31-70b.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Werewolf
+  agent_model: LLMModel
+  agent_model_config: gpt-4o-mini.yaml
+- agent_name: WereWolfAgent
+  agent_nick: Werewolf
+  agent_model: LLMModel
+  agent_model_config: gpt-4o-mini.yaml

@@ -1,0 +1,8 @@
+model_name: LLama-3.1-70b
+#api_key: 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
+api_key: sk-EVh6FIwqSaFfTCCA6VsFZO9JUo6DcsMcKf2Bv0U9rqMF9cSg
+api_url: https://api.deepbricks.ai/v1/
+max_tokens: 4096
+timeout: 300
+temperature: 0.2
+model_type: LLMModel

@@ -1,0 +1,16 @@
+agent:
+- agent_embedding_api_key: sk-sufonZ4mNq9h9SDq7e311aA6C31c40A1BaB5369481D96cFf
+  agent_embedding_api_url: https://api.openai.com
+  agent_embedding_model_name: text-embedding-ada-002
+  agent_model: LLMModel
+  agent_model_config: gemini-15-flash.yaml
+  agent_name: MastabaAgent
+  pinecone_key: 4dc46cc0-9dda-4049-aeab-cfc2962ae192
+eval:
+  num_matches: 10
+  output_path: ./output/gemini-15-flash/civ/scene3/gemini-15-flash_run_myagent_T1_FRANCE
+  weave_prj_name: eval_gemini-15-flash_civ_scene3_agent_run_myagent_T1_FRANCE
+game:
+  game_map: myagent_T1_FRANCE
+  game_name: CivEnv
+  game_turn: 400

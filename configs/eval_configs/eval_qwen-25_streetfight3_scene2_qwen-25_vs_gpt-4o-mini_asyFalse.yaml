@@ -1,0 +1,16 @@
+eval:
+  num_matches: 10
+  output_path: ./output/qwen-25/streetfight3/scene2/qwen-25_vs_gpt-4o-mini_asyFalse
+  weave_prj_name: eval_qwen-25_streetfight3_scene2_qwen-25_vs_gpt-4o-mini_asyFalse
+game:
+  game_name: StreetFight3Env
+  game_mode: agent_vs_agent
+  asynch_mode: false
+agent:
+- agent_name: StreetFight3Agent
+  agent_model: LLMModel
+  agent_model_config: qwen-25.yaml
+  agent_prompt: StreetFight3Prompt
+  agent_model_opp: LLMModel
+  agent_model_config_opp: gpt-4o-mini.yaml
+  agent_prompt_opp: StreetFight3Prompt

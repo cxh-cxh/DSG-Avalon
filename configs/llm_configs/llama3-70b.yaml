@@ -1,0 +1,7 @@
+model_name: llama3-70b-instruct
+api_key: sk-riW9NrBBPF
+api_url:
+max_tokens: 1024
+timeout: 60
+temperature: 0.2
+model_type: AliLLM

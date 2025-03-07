@@ -1,0 +1,16 @@
+game:
+  game_name: AgentVSComputerStarcraftEnv
+  game_map: Ancient Cistern LE
+  players: Protoss_VS_Protoss
+  game_difficulty: medium
+  game_ai_build: randombuild
+  asynch_mode: true
+agent:
+- agent_name: GPTAgent
+  agent_model: LLMModel
+  agent_model_config: gpt-4o-mini.yaml
+  agent_prompt: StarCraftIIPrompt_V4
+eval:
+  num_matches: 5
+  output_path: ./output/gpt-4o-mini/starcraft2/scene6/gpt-4o-mini_vs_computer_randombuild_asyTrue
+  weave_prj_name: eval_gpt-4o-mini_starcraft2_scene6_agent_vs_computer_randombuild_asyTrue
