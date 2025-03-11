@@ -16,7 +16,7 @@
 
 
 <p align="center">
-  📄 <a href="https://arxiv.org/abs/2503.06047" target="_blank">Paper</a> • 🌍 <a href="https://fateyetian.github.io/DSGBench/" target="_blank">Project Page</a> • 🤖 <a href="https://huggingface.co/Decix/DSGBench" target="_blank">HuggingFace</a> • 🎮 <a href="https://decibrain-group.github.io/GameWiki/" target="_blank">Game Wiki</a> • 💻 <a href="https://github.com/DeciBrain-Group/DSGBench" target="_blank">Code</a><br>
+  📄 <a href="https://arxiv.org/abs/2503.06047" target="_blank">Paper</a> • 🌍 <a href="https://fateyetian.github.io/DSGBench/" target="_blank">Project Page</a> • 🎮 <a href="https://decibrain-group.github.io/GameWiki/" target="_blank">Game Wiki</a> • 💻 <a href="https://github.com/DeciBrain-Group/DSGBench" target="_blank">Code</a><br>
 </p>
 
 ## 📖 Introduction
