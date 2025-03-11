@@ -11,7 +11,12 @@
 </div>
 
 <p align="center">
-  📄 <a href="https://arxiv.org/abs/xxx" target="_blank">Paper</a> • 🌍 <a href="https://fateyetian.github.io/DSGBench/" target="_blank">Project Page</a> • 🤖 <a href="https://huggingface.co/Decix/DSGBench" target="_blank">HuggingFace</a> • 🎮 <a href="https://decibrain-group.github.io/GameWiki/" target="_blank">Game Wiki</a> • 💻 <a href="https://github.com/DeciBrain-Group/DSGBench" target="_blank">Code</a><br>
+  <i>"The journey of strategic games is endless, where agents evolve to master the art of decision-making. This release represents our first step towards that vision."</i>
+</p>
+
+
+<p align="center">
+  📄 <a href="https://arxiv.org/abs/2503.06047" target="_blank">Paper</a> • 🌍 <a href="https://fateyetian.github.io/DSGBench/" target="_blank">Project Page</a> • 🤖 <a href="https://huggingface.co/Decix/DSGBench" target="_blank">HuggingFace</a> • 🎮 <a href="https://decibrain-group.github.io/GameWiki/" target="_blank">Game Wiki</a> • 💻 <a href="https://github.com/DeciBrain-Group/DSGBench" target="_blank">Code</a><br>
 </p>
 
 ## 📖 Introduction
@@ -28,7 +33,7 @@ DSGBench is a novel strategic game benchmark designed to evaluate the performanc
 
 - **Fine-grained Evaluation Metrics and Decision Trajectory Analysis**: DSGBench employs detailed evaluation metrics that cover strategic planning, real-time decision-making, adaptability, and multi-agent interactions. These fine-grained metrics provide deeper quantitative analysis of agent performance, offering insights into strengths and weaknesses across different dimensions, as opposed to relying solely on traditional win-rate metrics.
 
-- **Trajectory Dataset**: DSGBench provides a comprehensive decision trajectory dataset, which serves as a solid data foundation for trajectory fine-tuning (Trajectory SFT) and reinforcement learning from agent feedback (RL from Agent Feedback).
+- **Trajectory Dataset（To Do）**: DSGBench provides a comprehensive decision trajectory dataset, which serves as a solid data foundation for trajectory fine-tuning (Trajectory SFT) and reinforcement learning from agent feedback (RL from Agent Feedback).
 
 ## 🌍 Environment Overview
 
@@ -39,7 +44,7 @@ The evaluation environment for this project consisted of six dynamic, complex st
 | Environment         | Imperfect <br>Info | Strategic & <br>Tactical |Dynamic <br>space| Real-time v.s.<br>Turn-based | More Info                                                      |
 |--------------------|----------------|-------------------------|------------|--------------------------|----------------------------------------------------------------|
 | StarCraft II       | ✔              | ✔                       |✔         | Real-time                | [scene setting,prompt](./games/starcraft2/readme.md)           |
-| Civilization       | ✔              | ✘                       |✔         | Turn-based               | [scene setting,prompt](./games/civ/readme.md)                  |
+| Civilization       | ✔              | ✔                       |✔         | Turn-based               | [scene setting,prompt](./games/civ/readme.md)                  |
 | Street Fighter III | ✘              | ✘                       |✘         | Real-time                | [scene setting,prompt](./games/streetfight3/readme.md)         |
 | Diplomacy          | ✘              | ✔                       |✘         | Turn-based               | [scene setting,prompt](./games/welfare_diplomacy/readme.md)    |
 | Werewolf           | ✔              | ✔                       |✘         | Turn-based               | [scene setting,prompt,</br>visual](./games/werewolf/readme.md) |
@@ -106,8 +111,6 @@ pip uninstall websocket-client
 pip install websocket==0.2.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
 pip install websocket-client==1.8.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-# install dsgbench model ability calculation library
-pip install dsgbench-ability-calc==0.1.0
 
 ```
 
@@ -242,6 +245,8 @@ diambra run --images.no-pull -r [absolute roms path of street fight III] python 
 ### Step 5. Calculate model ability score
 After completing the tasks, you can calculate the model's ability score by running the following command:
 ```shell
+# install dsgbench model ability calculation library
+pip install dsgbench-ability-calc==0.1.0
 python calc_score.py
 ```
 
@@ -275,23 +280,47 @@ Each time you run the task, the **wandb project address** will be output. **Wand
 > **Note:** The structure represents a hierarchical view of the results, with ability_score as the main folder that includes model and game-specific performance data. Each game or scene has its detailed logs and results, separated by opponent types and scenarios.
 
 ## 🔮 Future Work
-We hope that the work of evaluating LLM-based agents through strategic game-theoretic games can be widely applied, as games are continuously evolving. Models can also continuously learn and evolve by interacting with opponents during gameplay, and game-based evaluation methods are also boundless.
-1. **Implementing the Elo Rating System**  
-   The competitive nature of the games requires the integration of the **Elo rating system**, a dynamic ranking mechanism that more accurately reflects the relative abilities of models. This system helps avoid the biases introduced by static scoring and provides a more realistic competitive environment for model evaluation.
+Strategic games represent an infinite arena where LLM-based agents can truly demonstrate their potential.  Through the dynamic interactions with opponents, agents not only learn and adapt but also develop increasingly complex strategies - much like how humans master the art of strategy. While this benchmark marks an important first step, there are several promising directions we envision for future exploration:
+
+1. **Creating a Unified Dataset for Strategic Game Scenarios**  
+   To perform in-depth strategic game evaluations, we will build a **standardized trajectory dataset** that covers various strategic scenarios. These datasets will provide rich training resources for trajectory-based supervised fine-tuning (SFT) and reinforcement learning (RL) feedback, contributing to more robust model development.
 
 2. **Developing a Hierarchical Evaluation Framework**  
    Evaluation should not be a one-time check but rather an ongoing process. We plan to introduce a **gradient hierarchical evaluation method**, which gradually increases task complexity from basic tasks to more intricate scenarios. This progressive approach will enable a deeper understanding of how models adapt and evolve in diverse situations.
 
-3. **Creating a Unified Dataset for Strategic Game Scenarios**  
-   To perform in-depth strategic game evaluations, we will build a **standardized trajectory dataset** that covers various strategic scenarios. These datasets will provide rich training resources for trajectory-based supervised fine-tuning (SFT) and reinforcement learning (RL) feedback, contributing to more robust model development.
+3. **Implementing the Elo Rating System**  
+   The competitive nature of the games requires the integration of the **Elo rating system**, a dynamic ranking mechanism that more accurately reflects the relative abilities of models. This system helps avoid the biases introduced by static scoring and provides a more realistic competitive environment for model evaluation.
 
-4. **Assessing the Impact of Different Agent Frameworks on Performance**  
-   Different agent frameworks can significantly influence model performance. We will test various frameworks to explore their impact on strategy execution and ranking results. This will allow us to further optimize agent architecture and improve the overall system performance.
+4. **Developing a Unified Reinforcement Learning Framework for LLM-based Agent**  
+   We aim to develop a unified reinforcement learning framework that integrates opponent modeling and strategic decision-making, enabling agents to better understand opponents and adapt their strategies in complex game scenarios, continuously enhancing the capabilities of LLM-based agents.
+
+
+## 🔄 Extending DSGBench
+The extension specifications for DSGBench will be released soon, allowing the community to contribute new game environments and evaluation scenarios. Stay tuned!
+
 
 ## 📄 License
-The DSGBench codebase is licensed under a [Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
+The DSGBench codebase is licensed under a [MIT License](https://opensource.org/licenses/MIT).
 
 ## 🤝 Acknowledgement
 This repo benefits from [TextStarCraft2](https://github.com/histmeisah/Large-Language-Models-play-StarCraftII/), [CivRealm](https://github.com/bigai-ai/civrealm),[welfare-diplomacy](https://github.com/mukobi/welfare-diplomacy), [Stratego Env](https://github.com/JBLanier/stratego_env) and [llm-colosseum](https://github.com/OpenGenerativeAI/llm-colosseum). Thanks for their wonderful works.
+
+## 📧 Contact
+For questions and discussions, please contact: wenjietang2022@163.com
+
+
+
+## 📚 Citation
+```bibtex
+@misc{tang2025dsgbenchdiversestrategicgame,
+      title={DSGBench: A Diverse Strategic Game Benchmark for Evaluating LLM-based Agents in Complex Decision-Making Environments}, 
+      author={Wenjie Tang and Yuan Zhou and Erqiang Xu and Keyan Cheng and Minne Li and Liquan Xiao},
+      year={2025},
+      eprint={2503.06047},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2503.06047}, 
+}
+```
 
 
