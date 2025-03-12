@@ -303,7 +303,7 @@ The extension specifications for DSGBench will be released soon, allowing the co
 The DSGBench codebase is licensed under a [MIT License](https://opensource.org/licenses/MIT).
 
 ## 🤝 Acknowledgement
-This repo benefits from [TextStarCraft2](https://github.com/histmeisah/Large-Language-Models-play-StarCraftII/), [CivRealm](https://github.com/bigai-ai/civrealm),[welfare-diplomacy](https://github.com/mukobi/welfare-diplomacy), [Stratego Env](https://github.com/JBLanier/stratego_env) and [llm-colosseum](https://github.com/OpenGenerativeAI/llm-colosseum). Thanks for their wonderful works.
+This repo benefits from [TextStarCraft2](https://github.com/histmeisah/Large-Language-Models-play-StarCraftII/), [CivRealm](https://github.com/bigai-ai/civrealm), [welfare-diplomacy](https://github.com/mukobi/welfare-diplomacy), [Stratego Env](https://github.com/JBLanier/stratego_env), [llm-colosseum](https://github.com/OpenGenerativeAI/llm-colosseum) and [werewolf_arena](https://github.com/google/werewolf_arena). Thanks for their wonderful works.
 
 ## 📧 Contact
 For questions and discussions, please contact: wenjietang2022@163.com
