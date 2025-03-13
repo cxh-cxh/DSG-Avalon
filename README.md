@@ -69,7 +69,7 @@ close(): Closes the game environment
 
 [`create_yaml.py`](create_yaml.py): This script generates specific configurations for multiple LLMs based on the basic configuration under [`configs/eval_config_base`](./configs/eval_config_base).
 
-[`mutiprocess_eval_tasks.py`](mutiprocess_eval_tasks.py): the running script for the evaluation
+[`multiprocess_eval_tasks.py`](multiprocess_eval_tasks.py): the running script for the evaluation
 
 
 
@@ -233,9 +233,9 @@ game:
 Once your tasks are configured, you can start running them with the following command:
 
 ```shell
-diambra run --images.no-pull -r [absolute roms path of street fight III] python mutiprocess_eval_tasks.py
+diambra run --images.no-pull -r [absolute roms path of street fight III] python multiprocess_eval_tasks.py
 # example
-# diambra run --images.no-pull -r D:\ubuntu\jinxin_work\Agent_Eval\llm-colosseum-main\llm-colosseum-main\roms python mutiprocess_eval_tasks.py
+# diambra run --images.no-pull -r D:\ubuntu\jinxin_work\Agent_Eval\llm-colosseum-main\llm-colosseum-main\roms python multiprocess_eval_tasks.py
 ```
 >**Note:** This command executes the evaluation tasks with the necessary ROMs for the game **Street Fighter III**. Make sure to replace `[absolute roms path of street fight III]` with the actual path to your ROMs directory.  
 >  
@@ -246,7 +246,7 @@ diambra run --images.no-pull -r [absolute roms path of street fight III] python 
 After completing the tasks, you can calculate the model's ability score by running the following command:
 ```shell
 # install dsgbench model ability calculation library
-pip install dsgbench-ability-calc==0.1.0
+pip install dsgbench-ability-calc==0.2.0
 python calc_score.py
 ```
 
