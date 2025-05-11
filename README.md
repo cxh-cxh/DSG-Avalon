@@ -33,7 +33,7 @@ DSGBench is a novel strategic game benchmark designed to evaluate the performanc
 
 - **Fine-grained Evaluation Metrics and Decision Trajectory Analysis**: DSGBench employs detailed evaluation metrics that cover strategic planning, real-time decision-making, adaptability, and multi-agent interactions. These fine-grained metrics provide deeper quantitative analysis of agent performance, offering insights into strengths and weaknesses across different dimensions, as opposed to relying solely on traditional win-rate metrics.
 
-- **Trajectory Dataset（To Do）**: DSGBench provides a comprehensive decision trajectory dataset, which serves as a solid data foundation for trajectory fine-tuning (Trajectory SFT) and reinforcement learning from agent feedback (RL from Agent Feedback).
+<!-- - **Trajectory Dataset（To Do）**: DSGBench provides a comprehensive decision trajectory dataset, which serves as a solid data foundation for trajectory fine-tuning (Trajectory SFT) and reinforcement learning from agent feedback (RL from Agent Feedback). -->
 
 ## 🌍 Environment Overview
 
@@ -250,6 +250,59 @@ pip install dsgbench-ability-calc==0.1.0
 python calc_score.py
 ```
 
+## 🚀 Start with docker compose
+### Step 1: Prerequisites
+Download the DSGBench disk file [download link](https://pan.baidu.com/s/1hW9VR23CKYOoZy4ahsoHSQ?pwd=1ii7) manually, and cat the data.img_* to data.img file
+> **Note**: The image size is over 60GB. Due to game environment compatibility issues, Linux image packaging is not currently supported. We are working to fix this and will provide Linux support as soon as possible.
+
+### Step 2: Directory Structure
+```shell
+|--dsgbench
+    |--data                      #  the win docker disk files
+        |--data.img                      #  the windows system disk files
+        |--windows.*                      #  the windows system disk files
+    |--docker-compose.yml        #  the docker compose files
+    |--.diambra                  #  the game files of Street Fighter III
+```
+### Step 3: Prepare Docker Environment
+```shell
+cd dsgbench
+
+# Get the Civilization game environment
+docker pull akon123456/freeciv-web
+docker tag akon123456/freeciv-web:latest freeciv/freeciv-web:latest
+
+# Get the DIAMBRA environment
+docker pull diambra/engine:v2.2
+
+# Get the Windows environment
+docker pull dockurr/windows:4.14
+```
+
+### Step 4: Create Network and Launch
+```shell
+# Create DSG network
+docker network create --subnet=172.22.0.0/24 dsg_network
+
+# Launch Docker Compose
+docker compose up -d
+
+# Access via browser: http://localhost:8006
+```
+
+### Step 5: Run Evaluation Tasks
+```shell
+# After opening CMD window
+activate dsgbench
+cd C:\deploy\DSGBench
+
+# Run tasks
+python multiprocess_eval_tasks.py
+
+# Calculate model ability score
+python calc_score.py
+```
+
 ## 🗂️ Result Structure
 The results include two main types: **wandb trace** and **txt result**.
 #### wandb result
@@ -301,6 +354,13 @@ The extension specifications for DSGBench will be released soon, allowing the co
 
 ## 📄 License
 The DSGBench codebase is licensed under a [MIT License](https://opensource.org/licenses/MIT).
+- **TextStarCraft2**: [MIT License](https://opensource.org/licenses/MIT)
+- **CivRealm**: [GNU General Public License v3 (GPL-3.0)](https://www.gnu.org/licenses/gpl-3.0.html)
+- **welfare-diplomacy**: [GNU AFFERO GENERAL PUBLIC LICENSE](https://www.gnu.org/licenses/agpl-3.0.html)
+- **Stratego Env**: [MIT License](https://opensource.org/licenses/MIT)
+- **llm-colosseum/Street Fighter**: [MIT License](https://opensource.org/licenses/MIT)
+- **werewolf_arena**: [Apache License](https://www.apache.org/licenses/LICENSE-2.0)
+
 
 ## 🤝 Acknowledgement
 This repo benefits from [TextStarCraft2](https://github.com/histmeisah/Large-Language-Models-play-StarCraftII/), [CivRealm](https://github.com/bigai-ai/civrealm), [welfare-diplomacy](https://github.com/mukobi/welfare-diplomacy), [Stratego Env](https://github.com/JBLanier/stratego_env), [llm-colosseum](https://github.com/OpenGenerativeAI/llm-colosseum) and [werewolf_arena](https://github.com/google/werewolf_arena). Thanks for their wonderful works.
