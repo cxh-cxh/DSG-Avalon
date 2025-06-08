@@ -35,7 +35,7 @@ def generate(model, **kwargs):
 # openai
 def generate_openai(model: str, prompt: str, json_mode: bool = True, **kwargs):
     # client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-    api_key = "sk-9e2f0afbd8da40b2b0b5ebd46c5674e6"
+    api_key = "sk-0089c89adac54c4090336be78d995766"
     api_url = "https://api.deepseek.com"
     client = OpenAI(api_key=api_key, base_url=api_url)
     response_format = {"type": "text"}
