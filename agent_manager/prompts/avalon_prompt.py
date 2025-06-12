@@ -15,7 +15,8 @@
 GAME = """You are playing a digital version of the social deduction game Avalon.
 
 GAME RULES:
-- Player Roles: {{num_players}} players — {{num_good}} Loyal Servants of Arthur (including Merlin, Percival, and optional roles like Lancelot) and {{num_evil}} Minions of Mordred (including Morgana, Assassin, Mordred, and optional roles like Oberon).
+- Player Roles: {{num_players}} players - {{num_good}} Loyal Servants of Arthur (including Merlin, Percival, and optional roles like Lancelot) and {{num_evil}} Minions of Mordred (including Morgana, Assassin, Mordred, and optional roles like Oberon).
+- In this game, there is 1 Merlin, 2 Servants, 1 Assassin and 1 Minion.
 - Rounds consist of three phases:
     - Team Selection Phase: A leader proposes a team for a mission. Players vote to approve/reject the team. Failed votes pass leadership.
     - Mission Phase: Selected players secretly choose to succeed or fail the mission. Evil players may sabotage.
@@ -54,6 +55,15 @@ MESSAGE_SO_FAR_THIS_ROUND = """\nROUND {{round}} MESSAGE:
 The discussion has not begun.{% endif %}\n\n
 """
 
+TEAM_HISTORY = """
+{% if team_history|length -%}
+{% for msg in team_history -%}
+{{ msg }}
+{% endfor -%}
+{% else -%}
+No team has been proposed.{% endif %}\n
+"""
+
 TEAM_INFO = """
 CURRENT TEAM IS:
 {{ team }}
@@ -73,8 +83,9 @@ PREFIX = f"""{GAME}
 TEAM = (
     PREFIX
     + MESSAGE_SO_FAR_THIS_ROUND
+    + TEAM_HISTORY
     + """INSTRUCTIONS:
-- You are the team leader for the current team. For this round, the team size is {{tema_size}} (including yourself). Choose your teammates and announce the reason for this team.
+- You are the team leader for the current team. For this round, the team size is {{team_size}} (including yourself). Choose {{team_size - 1}} player(s) as your teammate(s) and announce the reason for this team.
 - Your proposal sets the tone for trust or suspicion. Prioritize players who:  
   - Have consistent voting patterns.  
   - Were on previous successful quests (if Good) or failed quests (if Evil).  
@@ -96,7 +107,7 @@ TEAM = (
 
 ```json
 {
-  "reasoning": "string", // Explain your reasoning about who you should vote out. Avoid using violent or harmful language.
+  "reasoning": "string", // Explain your reasoning about who you should choose as teammate(s). Avoid using violent or harmful language.
   "say": "string", // Announcement about the team, every player will receive this. Avoid using violent or harmful language.
   "team": "string" // Names of the player. Choose {{team_size - 1}} player(s) from: {{options}}, seperate the names with comma ',', for example, "Amily, Bob, Cook".
 }"""
@@ -115,6 +126,7 @@ TEAM_SCHEMA = {
 MESSAGE = (
     PREFIX
     + MESSAGE_SO_FAR_THIS_ROUND
+    + TEAM_HISTORY
     + TEAM_INFO
     + """INSTRUCTIONS:
 - The team for the next mission is decided. You are speaking next in the discussion as {{name}} the {{role}}.
@@ -161,7 +173,7 @@ MESSAGE = (
 
 {% if role == 'Morgana' -%}  
 - Disguise yourself as Merlin to Percival. Act 'helpful' to gain trust.  
-- Subtly undermine Good's strategies. For example: “I'm not sure about this team… maybe swap [Player Y]?”  
+- Subtly undermine Good's strategies. For example: "I'm not sure about this team… maybe swap [Player Y]?"
 - Avoid overt lies; let Percival's confusion work in your favor.  
 
 {% elif role == 'Assassin' -%}  
@@ -201,6 +213,7 @@ MESSAGE_SCHEMA = {
 APPROVE = (
     PREFIX
     + MESSAGE_SO_FAR_THIS_ROUND
+    + TEAM_HISTORY
     + TEAM_INFO
     + """INSTRUCTIONS:
 - You are a candidate member of the current team. You need to agree or reject to join the team.
@@ -225,7 +238,7 @@ APPROVE = (
 
 {% if role == 'Merlin' -%}  
 - Subtly steer votes: Reject teams with Evil players (but avoid seeming too certain).  
-- Example: “I don't trust [Evil player]'s vibe. Can we swap them out?”  
+- Example: "I don't trust [Evil player]'s vibe. Can we swap them out?"  
 
 {% elif role == 'Percival' -%}  
 - Protect Merlin: Approve teams where Merlin is included, but reject if Morgana is likely disguised on the team.  
@@ -251,7 +264,7 @@ APPROVE = (
 
 ```json
 {
-  "reasoning": "string", // Explain your reasoning about who you should vote out. Avoid using violent or harmful language.
+  "reasoning": "string", // Explain your reasoning about whether to agree to join the team. Avoid using violent or harmful language.
   "approve": "string" // Agree (yes) or reject (no) to join the current team. Choose from: {{options}}
 }"""
 )
@@ -268,6 +281,7 @@ APPROVE_SCHEMA = {
 VOTE = (
     PREFIX
     + MESSAGE_SO_FAR_THIS_ROUND
+    + TEAM_HISTORY
     + TEAM_INFO
     + """INSTRUCTIONS:
 - The team is going on a mission. Vote 'succeed' to help the mission or 'failure' to sabotage the mission.
@@ -310,7 +324,11 @@ VOTE_SCHEMA = {
 }
 
 MISSION_INFO = """
-
+{% if success -%}  
+The team of {{ team }} with leader {{ leader }} succeeded in the mission.
+{% else -%}  
+The team of {{ team }} with leader {{ leader }} failed the mission.
+{% endif %}  
 """
 
 POST_MISSION = (

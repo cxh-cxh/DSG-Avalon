@@ -9,7 +9,7 @@ merlin = Merlin("Alice", model="deepseek-chat")
 assassin = Assassin("Bob", model="deepseek-chat")
 servant1 = Servant("Carol", model="deepseek-chat")
 servant2 = Servant("Dan", model="deepseek-chat")
-minion = Merlin("Emily", model="deepseek-chat")
+minion = Minion("Emily", model="deepseek-chat")
 
 players = [merlin.name, assassin.name, servant1.name, servant2.name, minion.name]
 
@@ -50,4 +50,4 @@ minion.initialize_game_view(
 
 state = State("111", merlin, assassin, [servant1, servant2], [minion])
 gm = GameMaster(state=state)
-gm.run_round()
+gm.run_game()

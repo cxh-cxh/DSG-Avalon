@@ -20,7 +20,13 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from games.avalon.lm import LmLog, generate
 from agent_manager.prompts.avalon_prompt import ACTION_PROMPTS_AND_SCHEMAS
 from games.avalon.utils import Deserializable
-from games.avalon.config import MAX_DEBATE_TURNS, NUM_PLAYERS, TEAM_SIZE
+from games.avalon.config import (
+    MAX_DEBATE_TURNS,
+    NUM_PLAYERS,
+    NUM_GOOD,
+    NUM_EVIL,
+    TEAM_SIZE,
+)
 
 # Role names
 MERLIN = "Merlin"
@@ -85,16 +91,25 @@ class GameView:
         self.round_number: int = round_number
         self.current_players: List[str] = current_players
         self.message: List[tuple[str, str]] = []
+        self.team_message: List[str] = []
         self.other_good: Optional[str] = other_good
         self.other_evil: Optional[str] = other_evil
+        self.current_team = []
+        self.current_leader = None
+        self.success = False
 
     def update_message(self, author: str, dialogue: str):
         """Adds a new dialogue entry to the message."""
         self.message.append((author, dialogue))
 
+    def update_team_message(self, info: str):
+        """Adds a new team info entry to the message."""
+        self.team_message.append(info)
+
     def clear_message(self):
         """Clears all entries from the message."""
         self.message.clear()
+        self.team_message.clear()
 
     def to_dict(self) -> Any:
         return to_dict(self)
@@ -119,7 +134,6 @@ class Player(Deserializable):
         self.personality = personality
         self.model = model
         self.observations: List[str] = []
-        self.bidding_rationale = ""
         self.gamestate: Optional[GameView] = None
         self.is_leader = False
 
@@ -148,12 +162,6 @@ class Player(Deserializable):
                 "GameView not initialized. Call initialize_game_view() first."
             )
 
-        # remaining_players = [
-        #     f"{player} (You)" if player == self.name else player
-        #     for player in self.gamestate.current_players
-        # ]
-        # random.shuffle(remaining_players)
-
         formatted_message = [
             (
                 f"{author} (You): {dialogue}"
@@ -170,10 +178,16 @@ class Player(Deserializable):
             "role": self.role,
             "round": self.gamestate.round_number,
             "observations": formatted_observations,
+            "team": ", ".join(self.gamestate.current_team),
+            "leader": self.gamestate.current_leader,
+            "team_history": self.gamestate.team_message,
             "message": formatted_message,
             "personality": self.personality,
             "num_players": NUM_PLAYERS,
+            "num_good": NUM_GOOD,
+            "num_evil": NUM_EVIL,
             "team_size": TEAM_SIZE[self.gamestate.round_number],
+            "success": self.gamestate.success,
         }
 
     def _generate_action(
@@ -221,6 +235,8 @@ class Player(Deserializable):
         random.shuffle(options)
         result, log = self._generate_action("team", options)
         team = result.get("team", None).replace(" ", "").split(",")
+        team = team[: TEAM_SIZE[self.gamestate.round_number] - 1]
+        team.append(self.name)
         team_message = result.get("say", None)
         if team is not None:
             self._add_observation(f"I choose {', '.join(team)} to join my team.")
@@ -253,7 +269,7 @@ class Player(Deserializable):
             raise ValueError(
                 "GameView not initialized. Call initialize_game_view() first."
             )
-        vote, log = self._generate_action("team", options=["success", "failure"])
+        vote, log = self._generate_action("vote", options=["success", "failure"])
         ret = None
         if vote is not None:
             if vote == "success":
@@ -351,7 +367,7 @@ class Merlin(Player):
         model: Optional[str] = None,
         personality: Optional[str] = None,
     ):
-        super().__init__(name=name, role=SERVANT, model=model, personality=personality)
+        super().__init__(name=name, role=MERLIN, model=model, personality=personality)
 
     def _get_game_state(self, **kwargs) -> Dict[str, Any]:
         """Gets the current game state, including evil-specific context."""
@@ -420,7 +436,7 @@ class Minion(Player):
                 "GameView not initialized. Call initialize_game_view() first."
             )
 
-        context = f"\n- The other Minions are {self.gamestate.other_evil.join(', ')}."
+        context = f"\n- The other Minions are {', '.join(self.gamestate.other_evil)}."
 
         return context
 
@@ -444,7 +460,7 @@ class Assassin(Player):
         model: Optional[str] = None,
         personality: Optional[str] = None,
     ):
-        super().__init__(name=name, role=MINION, model=model, personality=personality)
+        super().__init__(name=name, role=ASSASSIN, model=model, personality=personality)
 
     def _get_game_state(self, **kwargs) -> Dict[str, Any]:
         """Gets the current game state, including evil-specific context."""
@@ -570,6 +586,10 @@ class State(Deserializable):
             player.name
             for player in self.servants + self.minions + [self.merlin, self.assassin]
         ]
+        random.shuffle(self.player_names)
+        # for i in range(len(self.player_names)):
+        #     if self.player_names[i] == merlin.name:
+        #         self.leader = i
         self.rounds: List[Round] = []
         self.error_message: str = ""
         self.winner: str = ""

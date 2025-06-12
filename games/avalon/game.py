@@ -18,7 +18,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 import random
 from typing import List
-
+import copy
 import tqdm
 
 from games.avalon.model import Round, RoundLog, State, VoteLog, TeamLog, ApproveLog
@@ -70,6 +70,19 @@ class GameMaster:
             )
             self.this_round.team_message.append([leader.name, team_message])
             self.this_round.team.append(team)
+
+            for name in self.this_round.players:
+                player = self.state.players[name]
+                if player.gamestate:
+                    player.gamestate.update_message(leader.name, team_message)
+                    player.gamestate.update_team_message(
+                        f"Team {team_idx+1} is {', '.join(team)}.\n"
+                    )
+                    player.gamestate.current_team = copy.copy(team)
+                    player.gamestate.current_leader = leader.name
+                else:
+                    raise ValueError(f"{name}.gamestate needs to be initialized.")
+
             tqdm.tqdm.write(f"{leader.name} ({leader.role}): {team_message}")
 
             for idx in range(NUM_PLAYERS - 1):
@@ -103,8 +116,23 @@ class GameMaster:
                 self.this_round.approve.append(approves)
                 self.this_round_log.approve.append(approve_logs)
 
-                agree = 0
+                agree = 1  # leader automatically agree
                 for player, approve in self.this_round.approve[-1].items():
+                    for name in self.this_round.players:
+                        p = self.state.players[name]
+                        if p.gamestate:
+                            if approve:
+                                p.gamestate.update_team_message(
+                                    f"{name} agreed to join team {team_idx+1}.\n"
+                                )
+                            else:
+                                p.gamestate.update_team_message(
+                                    f"{name} rejected to join team {team_idx+1}.\n"
+                                )
+                        else:
+                            raise ValueError(
+                                f"{name}.gamestate needs to be initialized."
+                            )
                     if approve:
                         agree += 1
                         tqdm.tqdm.write(f"{player} agreed to join the team {team_idx}")
@@ -130,7 +158,17 @@ class GameMaster:
 
             for name in self.this_round.players:
                 player = self.state.players[name]
-                player.add_announcement(announcement)
+                if player.gamestate:
+                    player.gamestate.update_team_message(announcement)
+                else:
+                    raise ValueError(f"{name}.gamestate needs to be initialized.")
+
+        for name in self.this_round.players:
+            player = self.state.players[name]
+            if player.gamestate:
+                player.gamestate.update_team_message(announcement)
+            else:
+                raise ValueError(f"{name}.gamestate needs to be initialized.")
 
     def post_mission_discussion(self):
         for idx in range(NUM_PLAYERS):
@@ -199,19 +237,23 @@ class GameMaster:
             else:
                 tqdm.tqdm.write(f"{player} voted success for the mission")
 
+        success = None
         if failure >= FAILURE_VOTE[self.current_round_num]:
             self.state.failure_cnt += 1
-            announcement = f"The mission of Round {self.current_round_num + 1} failed."
+            success = False
+            # announcement = f"The mission of Round {self.current_round_num + 1} failed."
             tqdm.tqdm.write(f"The mission failed")
         else:
             self.state.success_cnt += 1
-            announcement = (
-                f"The mission of Round {self.current_round_num + 1} succeeded."
-            )
+            success = True
+            # announcement = (
+            #     f"The mission of Round {self.current_round_num + 1} succeeded."
+            # )
             tqdm.tqdm.write(f"The mission succeeded")
         for name in self.this_round.players:
             player = self.state.players[name]
-            player.add_announcement(announcement)
+            player.gamestate.success = success
+            # player.add_announcement(announcement)
 
         self.post_mission_discussion()
         self.summary()
@@ -228,7 +270,7 @@ class GameMaster:
         with ThreadPoolExecutor(max_workers=self.num_threads) as executor:
             player_votes = {
                 name: executor.submit(self.state.players[name].approve)
-                for name in self.this_round.team[-1]
+                for name in self.this_round.team[-1][:-1]
             }
 
             for player_name, approve_task in player_votes.items():
@@ -276,7 +318,7 @@ class GameMaster:
         """The assassin trys to assassinate Merlin."""
         target, log = self.state.assassin.assassinate()
 
-        if target == self.state.merlin:
+        if target == self.state.merlin.name:
             announcement = "The assassin assassinated Merlin."
             self.state.winner = "Evil"
         else:
@@ -319,7 +361,7 @@ class GameMaster:
         """Determine the winner of the game."""
         if self.state.success_cnt >= 3:
             return "Good"
-        elif self.state.success_cnt >= 3:
+        elif self.state.failure_cnt >= 3:
             return "Evil"
         else:
             return ""
