@@ -143,9 +143,16 @@ class Player(Deserializable):
         self.is_leader = False
 
     def initialize_game_view(
-        self, round_number, current_players, other_good=None, other_evil=None
+        self,
+        round_number,
+        current_players,
+        other_good=None,
+        other_evil=None,
+        merlins=None,
     ) -> None:
-        self.gamestate = GameView(round_number, current_players, other_good, other_evil)
+        self.gamestate = GameView(
+            round_number, current_players, other_good, other_evil, merlins
+        )
 
     def _add_observation(self, observation: str):
         """Adds an observation for the given round."""
@@ -389,7 +396,7 @@ class Merlin(Player):
         context = f"\n- The Minions are {', '.join(self.gamestate.other_evil)}."
         context += f"\n- The Servants are {', '.join(self.gamestate.other_good)}."
         if HAS_MORDRED:
-            context -= f"\n- NOTE: Mordred is hiding among the Servants."
+            context += f"\n- NOTE: Mordred is hiding among the Servants."
 
         return context
 
@@ -413,7 +420,7 @@ class Percival(Player):
         model: Optional[str] = None,
         personality: Optional[str] = None,
     ):
-        super().__init__(name=name, role=Percival, model=model, personality=personality)
+        super().__init__(name=name, role=PERCIVAL, model=model, personality=personality)
 
     def _get_game_state(self, **kwargs) -> Dict[str, Any]:
         """Gets the current game state, including evil-specific context."""
@@ -715,11 +722,17 @@ class State(Deserializable):
         self.leader = 0
         self.players: Dict[str, Player] = {
             player.name: player
-            for player in self.servants + self.minions + [self.merlin, self.assassin]
+            for player in self.servants
+            + self.minions
+            + [self.merlin, self.assassin, self.mordred, self.percival, self.morgana]
+            if player
         }
         self.player_names = [
             player.name
-            for player in self.servants + self.minions + [self.merlin, self.assassin]
+            for player in self.servants
+            + self.minions
+            + [self.merlin, self.assassin, self.mordred, self.percival, self.morgana]
+            if player
         ]
         random.shuffle(self.player_names)
         # for i in range(len(self.player_names)):
