@@ -27,8 +27,11 @@ NUM_GOOD = 3
 NUM_EVIL = 2
 _THREADS = 1
 
-TEAM_SIZE = [2, 2, 3, 4, 5]
+TEAM_SIZE = [2, 3, 3, 4, 4]
 FAILURE_VOTE = [1, 1, 1, 2, 1]
+
+HAS_MORDRED = False
+HAS_PERCIVAL_AND_MORGANA = False
 
 
 def get_player_names():

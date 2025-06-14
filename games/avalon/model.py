@@ -26,15 +26,18 @@ from games.avalon.config import (
     NUM_GOOD,
     NUM_EVIL,
     TEAM_SIZE,
+    HAS_MORDRED,
+    HAS_PERCIVAL_AND_MORGANA,
 )
 
 # Role names
 MERLIN = "Merlin"
+PERCIVAL = "Percival"
 SERVANT = "Servant"
 ASSASSIN = "Assassin"
+MORDRED = "Mordred"
+MORGANA = "Morgana"
 MINION = "Minion"
-# SEER = "Seer"
-# DOCTOR = "Doctor"
 
 
 def group_and_format_observations(observations):
@@ -87,6 +90,7 @@ class GameView:
         current_players: List[str],
         other_good: Optional[str] = None,
         other_evil: Optional[str] = None,
+        merlins: Optional[str] = None,
     ):
         self.round_number: int = round_number
         self.current_players: List[str] = current_players
@@ -94,6 +98,7 @@ class GameView:
         self.team_message: List[str] = []
         self.other_good: Optional[str] = other_good
         self.other_evil: Optional[str] = other_evil
+        self.merlins: Optional[str] = merlins
         self.current_team = []
         self.current_leader = None
         self.success = False
@@ -383,6 +388,46 @@ class Merlin(Player):
 
         context = f"\n- The Minions are {', '.join(self.gamestate.other_evil)}."
         context += f"\n- The Servants are {', '.join(self.gamestate.other_good)}."
+        if HAS_MORDRED:
+            context -= f"\n- NOTE: Mordred is hiding among the Servants."
+
+        return context
+
+    @classmethod
+    def from_json(cls, data: dict[Any, Any]):
+        name = data["name"]
+        model = data.get("model", None)
+        o = cls(name=name, model=model)
+        o.gamestate = data.get("gamestate", None)
+        # o.bidding_rationale = data.get("bidding_rationale", "")
+        o.observations = data.get("observations", [])
+        return o
+
+
+class Percival(Player):
+    """Represents a Servant in the game."""
+
+    def __init__(
+        self,
+        name: str,
+        model: Optional[str] = None,
+        personality: Optional[str] = None,
+    ):
+        super().__init__(name=name, role=Percival, model=model, personality=personality)
+
+    def _get_game_state(self, **kwargs) -> Dict[str, Any]:
+        """Gets the current game state, including evil-specific context."""
+        state = super()._get_game_state(**kwargs)
+        state["player_context"] = self._get_context()
+        return state
+
+    def _get_context(self):
+        if not self.gamestate:
+            raise ValueError(
+                "GameView not initialized. Call initialize_game_view() first."
+            )
+
+        context = f"\n- One of {', '.join(self.gamestate.merlins)} is Merlin, the other is Morgana."
 
         return context
 
@@ -413,22 +458,6 @@ class Minion(Player):
         state = super()._get_game_state(**kwargs)
         state["player_context"] = self._get_evil_context()
         return state
-
-    # def eliminate(self) -> tuple[str, "LmLog"]:
-    #     """Choose a player to eliminate."""
-    #     if not self.gamestate:
-    #         raise ValueError(
-    #             "GameView not initialized. Call initialize_game_view() first."
-    #         )
-
-    #     options = [
-    #         player
-    #         for player in self.gamestate.current_players
-    #         if player != self.name and player != self.gamestate.other_wolf
-    #     ]
-    #     random.shuffle(options)
-    #     eliminate, log = self._generate_action("remove", options)
-    #     return eliminate, log
 
     def _get_evil_context(self):
         if not self.gamestate:
@@ -461,6 +490,106 @@ class Assassin(Player):
         personality: Optional[str] = None,
     ):
         super().__init__(name=name, role=ASSASSIN, model=model, personality=personality)
+
+    def _get_game_state(self, **kwargs) -> Dict[str, Any]:
+        """Gets the current game state, including evil-specific context."""
+        state = super()._get_game_state(**kwargs)
+        state["player_context"] = self._get_evil_context()
+        return state
+
+    def assassinate(self) -> tuple[str, "LmLog"]:
+        """Assassinate a player (Merlin)."""
+        if not self.gamestate:
+            raise ValueError(
+                "GameView not initialized. Call initialize_game_view() first."
+            )
+
+        options = [player for player in self.gamestate.other_good]
+        random.shuffle(options)
+        assassinate, log = self._generate_action("assassinate", options)
+        return assassinate, log
+
+    def _get_evil_context(self):
+        if not self.gamestate:
+            raise ValueError(
+                "GameView not initialized. Call initialize_game_view() first."
+            )
+
+        context = f"\n- The other Minions are {', '.join(self.gamestate.other_evil)}."
+
+        return context
+
+    @classmethod
+    def from_json(cls, data: dict[Any, Any]):
+        name = data["name"]
+        model = data.get("model", None)
+        o = cls(name=name, model=model)
+        o.gamestate = data.get("gamestate", None)
+        # o.bidding_rationale = data.get("bidding_rationale", "")
+        o.observations = data.get("observations", [])
+        return o
+
+
+class Mordred(Player):
+    """Represents Mordred in the game."""
+
+    def __init__(
+        self,
+        name: str,
+        model: Optional[str] = None,
+        personality: Optional[str] = None,
+    ):
+        super().__init__(name=name, role=MORDRED, model=model, personality=personality)
+
+    def _get_game_state(self, **kwargs) -> Dict[str, Any]:
+        """Gets the current game state, including evil-specific context."""
+        state = super()._get_game_state(**kwargs)
+        state["player_context"] = self._get_evil_context()
+        return state
+
+    def assassinate(self) -> tuple[str, "LmLog"]:
+        """Assassinate a player (Merlin)."""
+        if not self.gamestate:
+            raise ValueError(
+                "GameView not initialized. Call initialize_game_view() first."
+            )
+
+        options = [player for player in self.gamestate.other_good]
+        random.shuffle(options)
+        assassinate, log = self._generate_action("assassinate", options)
+        return assassinate, log
+
+    def _get_evil_context(self):
+        if not self.gamestate:
+            raise ValueError(
+                "GameView not initialized. Call initialize_game_view() first."
+            )
+
+        context = f"\n- The other Minions are {', '.join(self.gamestate.other_evil)}."
+
+        return context
+
+    @classmethod
+    def from_json(cls, data: dict[Any, Any]):
+        name = data["name"]
+        model = data.get("model", None)
+        o = cls(name=name, model=model)
+        o.gamestate = data.get("gamestate", None)
+        # o.bidding_rationale = data.get("bidding_rationale", "")
+        o.observations = data.get("observations", [])
+        return o
+
+
+class Morgana(Player):
+    """Represents Mordred in the game."""
+
+    def __init__(
+        self,
+        name: str,
+        model: Optional[str] = None,
+        personality: Optional[str] = None,
+    ):
+        super().__init__(name=name, role=MORGANA, model=model, personality=personality)
 
     def _get_game_state(self, **kwargs) -> Dict[str, Any]:
         """Gets the current game state, including evil-specific context."""
@@ -571,12 +700,18 @@ class State(Deserializable):
         assassin: Assassin,
         servants: List[Servant],
         minions: List[Minion],
+        mordred: Mordred = None,
+        percival: Percival = None,
+        morgana: Morgana = None,
     ):
         self.session_id: str = session_id
         self.merlin: Merlin = merlin
         self.assassin: Assassin = assassin
         self.servants: List[Servant] = servants
         self.minions: List[Minion] = minions
+        self.mordred = mordred
+        self.percival = percival
+        self.morgana = morgana
         self.leader = 0
         self.players: Dict[str, Player] = {
             player.name: player

@@ -349,10 +349,9 @@ POST_MISSION = (
   - Who acted defensive during approving?  
   - How many 'failure' votes were needed to make the mission fail?  
 - Use failures to narrow down suspects. For example: "If mission at Round 2 failed with 3 players, at least one is Evil."
-
 {% elif role in ['Minion', 'Morgana', 'Assassin', 'Mordred', 'Oberon'] -%}  
-- Downplay success: "This proves nothing—Evil might be hiding."  
-- Act relieved: "Thank goodness we trusted the right people!" 
+- You may downplay success: "This proves nothing—Evil might be hiding."  
+- You may act relieved: "Thank goodness we trusted the right people!" 
 {% endif %}  
 
 {% else -%}  
