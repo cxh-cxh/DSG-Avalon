@@ -207,7 +207,7 @@ class GameMaster:
                 raise ValueError("get_next_speaker did not return a valid player.")
 
             player = self.state.players[next_speaker]
-            dialogue, log = player.post_mission()
+            dialogue, log = player.summarize()
             if dialogue is None:
                 raise ValueError(f"{next_speaker} did not return a valid summary from.")
 
