@@ -28,6 +28,7 @@ from games.avalon.config import (
     TEAM_SIZE,
     HAS_MORDRED,
     HAS_PERCIVAL_AND_MORGANA,
+    FAILURE_VOTE,
 )
 
 # Role names
@@ -139,6 +140,7 @@ class Player(Deserializable):
         self.personality = personality
         self.model = model
         self.observations: List[str] = []
+        self.history: List[str] = []
         self.gamestate: Optional[GameView] = None
         self.is_leader = False
 
@@ -162,6 +164,15 @@ class Player(Deserializable):
             )
 
         self.observations.append(f"Round {self.gamestate.round_number}: {observation}")
+
+    def add_history(self, history: str):
+        """Adds an observation for the given round."""
+        if not self.gamestate:
+            raise ValueError(
+                "GameView not initialized. Call initialize_game_view() first."
+            )
+
+        self.history.append(history)
 
     def add_announcement(self, announcement: str):
         """Adds the current game announcement to the player's observations."""
@@ -190,6 +201,7 @@ class Player(Deserializable):
             "role": self.role,
             "round": self.gamestate.round_number,
             "observations": formatted_observations,
+            "history": self.history,
             "team": ", ".join(self.gamestate.current_team),
             "leader": self.gamestate.current_leader,
             "team_history": self.gamestate.team_message,
@@ -200,6 +212,7 @@ class Player(Deserializable):
             "num_evil": NUM_EVIL,
             "team_size": TEAM_SIZE[self.gamestate.round_number],
             "success": self.gamestate.success,
+            "fail_cnt": FAILURE_VOTE[self.gamestate.round_number],
         }
 
     def _generate_action(

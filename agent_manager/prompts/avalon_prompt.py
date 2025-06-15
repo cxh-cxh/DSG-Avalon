@@ -16,13 +16,14 @@ GAME = """You are playing a digital version of the social deduction game Avalon.
 
 GAME RULES:
 - Player Roles: {{num_players}} players - {{num_good}} Loyal Servants of Arthur (including Merlin, Percival, and optional roles like Lancelot) and {{num_evil}} Minions of Mordred (including Morgana, Assassin, Mordred, and optional roles like Oberon).
-- In this game, there is 1 Merlin, 2 Servants, 1 Assassin and 1 Minion.
+- In this game, there is 1 Merlin, 1 Percival, 2 Servants, 1 Assassin, 1 Mordred and 1 Morgana.
 - Rounds consist of three phases:
     - Team Selection Phase: A leader proposes a team for a mission. Players vote to approve/reject the team. Failed votes pass leadership.
     - Mission Phase: Selected players secretly choose to succeed or fail the mission. Evil players may sabotage.
     - Assassination Phase: If 3 missions succeed, the Assassin tries to kill Merlin.
 - Special Role Abilities:
     - Merlin sees all Evil players (except Mordred).
+    - Mordred's identity is unknown to Merlin.
     - Percival knows Merlin's identity.
     - Morgana disguises as Merlin to Percival.
     - Assassin determines Evil's final chance to win.
@@ -37,6 +38,14 @@ STATE = """GAME STATE:
 {% if personality -%}
 - Personality: {{ personality }}
 {% endif -%}
+"""
+
+HISTORY = """
+{% if history|length -%}GAME HISTORY:
+{% for turn in history -%}
+{{ turn }}
+{% endfor %}
+{% endif %}
 """
 
 OBSERVATIONS = """{% if observations|length -%}YOUR OBSERVATIONS:
@@ -76,6 +85,8 @@ CURRENT TEAM LEADER IS:
 PREFIX = f"""{GAME}
 
 {STATE}
+
+{HISTORY}
 
 {OBSERVATIONS}
 """.strip()
@@ -294,8 +305,8 @@ VOTE = (
 
 {% elif role in ['Minion', 'Morgana', 'Assassin', 'Mordred', 'Oberon'] -%}  
 - Sabotage strategically:  
-  - Early Rounds (1-2): Fail only if necessary. Letting Good win 1-2 missions builds false trust.  
-  - Critical Rounds (3-5): Fail decisively. Coordinate with allies to ensure enough failures.  
+  - Early Rounds (0-1): Fail only if necessary. Letting Good win 1-2 missions builds false trust.  
+  - Critical Rounds (2-4): Fail decisively. Coordinate with allies to ensure enough failures.  
   - Avoid over-sabotaging. Example: If only 1 'failure' vote is needed, let one Evil player fail—multiple fails expose your numbers.  
 - Blend in:  
   - If you vote 'success', act relieved: "Thank goodness we trusted the right people!"  
@@ -340,7 +351,7 @@ POST_MISSION = (
 - The current mission succeeded. You need to analyze the mission.
 - The current round is round {{round}}, and {{fail_cnt}} 'failure' votes will make the mission fail.
 - Think strategically as {{role}} and decide your speech.
-- Your speech will be announced publically to all players.
+- Your speech will be announced publically to all players. Avoid showing your role to your enemies.
 
 {% if role in ['Servant', 'Merlin', 'Percival'] -%}  
 - Focus on who was *on the team* and their past votes/proposals. Evil players often avoid overt suspicion. 
@@ -358,7 +369,7 @@ POST_MISSION = (
 - The current mission failed. You need to analyze the mission.
 - The current round is round {{round}}, and {{fail_cnt}} 'failure' votes will make the mission fail.
 - Think strategically as {{role}} and decide your speech.
-- Your speech will be announced publically to all players.
+- Your speech will be announced publically to all players. Avoid showing your role to your enemies.
 
 {% if role in ['Servant', 'Merlin', 'Percival'] -%}  
 - Focus on who was on the team and their past votes/proposals. Evil players often avoid overt suspicion.  
@@ -378,7 +389,7 @@ POST_MISSION = (
 ```json
 {
 "reasoning": "string", // Your reasoning about what you should say.
-"say": "string" // Announce your opinions about the mission results.
+"say": "string" // Announce your opinions about the mission results. Avoid showing your role to your enemies.
 } """
 )
 

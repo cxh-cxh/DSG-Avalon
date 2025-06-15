@@ -123,11 +123,11 @@ class GameMaster:
                         if p.gamestate:
                             if approve:
                                 p.gamestate.update_team_message(
-                                    f"{name} agreed to join team {team_idx+1}.\n"
+                                    f"{player} agreed to join team {team_idx+1}.\n"
                                 )
                             else:
                                 p.gamestate.update_team_message(
-                                    f"{name} rejected to join team {team_idx+1}.\n"
+                                    f"{player} rejected to join team {team_idx+1}.\n"
                                 )
                         else:
                             raise ValueError(
@@ -180,7 +180,7 @@ class GameMaster:
                 raise ValueError("get_next_speaker did not return a valid player.")
 
             player = self.state.players[next_speaker]
-            dialogue, log = player.summarize()
+            dialogue, log = player.post_mission()
             if dialogue is None:
                 raise ValueError(
                     f"{next_speaker} did not return a valid dialouge from."
@@ -209,20 +209,11 @@ class GameMaster:
             player = self.state.players[next_speaker]
             dialogue, log = player.post_mission()
             if dialogue is None:
-                raise ValueError(
-                    f"{next_speaker} did not return a valid dialouge from."
-                )
+                raise ValueError(f"{next_speaker} did not return a valid summary from.")
 
             self.this_round_log.messages.append((next_speaker, log))
             self.this_round.message.append([next_speaker, dialogue])
-            tqdm.tqdm.write(f"{next_speaker} ({player.role}): {dialogue}")
-
-            for name in self.this_round.players:
-                player = self.state.players[name]
-                if player.gamestate:
-                    player.gamestate.update_message(next_speaker, dialogue)
-                else:
-                    raise ValueError(f"{name}.gamestate needs to be initialized.")
+            tqdm.tqdm.write(f"{next_speaker} ({player.role}) summary: {dialogue}")
 
     def run_mission(self):
         votes, vote_log = self.run_voting()
@@ -241,19 +232,17 @@ class GameMaster:
         if failure >= FAILURE_VOTE[self.current_round_num]:
             self.state.failure_cnt += 1
             success = False
-            # announcement = f"The mission of Round {self.current_round_num + 1} failed."
+            announcement = f"Round {self.current_round_num + 1}: The team of {', '.join(self.this_round.team[-1])} lead by {self.state.player_names[self.state.leader]} failed the mission."
             tqdm.tqdm.write(f"The mission failed")
         else:
             self.state.success_cnt += 1
             success = True
-            # announcement = (
-            #     f"The mission of Round {self.current_round_num + 1} succeeded."
-            # )
+            announcement = f"Round {self.current_round_num + 1}: The team of {', '.join(self.this_round.team[-1])} lead by {self.state.player_names[self.state.leader]} succeeded the mission."
             tqdm.tqdm.write(f"The mission succeeded")
         for name in self.this_round.players:
             player = self.state.players[name]
             player.gamestate.success = success
-            # player.add_announcement(announcement)
+            player.add_history(announcement)
 
         self.post_mission_discussion()
         self.summary()
